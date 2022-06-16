@@ -17,8 +17,15 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from DockShell!');
-        vscode.commands.getCommands().then((v) => {console.log(v); });
-        console.log("End of command handler for dockshell.helloWorld");
+        //vscode.commands.getCommands().then((v) => {console.log(v); });
+        //console.log("End of command handler for dockshell.helloWorld");
+        const resultPromise = vscode.window.showQuickPick(
+            ['hello','world'],
+            {
+                title: "Choose your word"
+            }
+        );
+        resultPromise.then( (v) => vscode.window.showInformationMessage(v) );
 	});
 
 	context.subscriptions.push(disposable);
