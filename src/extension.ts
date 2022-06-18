@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
                 title: "Choose your word"
             }
         );
-        resultPromise.then( (v) => vscode.window.showInformationMessage(v) );
+        resultPromise.then( (v ) => vscode.window.showInformationMessage<string>(v ? v : 'bad arg') );
 	});
 
 	context.subscriptions.push(disposable);
