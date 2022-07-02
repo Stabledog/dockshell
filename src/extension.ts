@@ -1,10 +1,28 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('dockshell.persistWorkspaceData', (x)    => {
+            // Create workspace storage folder if it's not there yet:
+            const sp=context.storageUri!.fsPath;
+            console.log(`workspace data folder: ${sp}`);
+            //const sp2="c:\\temp\\foobar92";
+            if (!fs.existsSync(sp)) {
+                fs.mkdirSync(sp);
+            }
+
+            fs.writeFileSync(path.join(sp,'myfile.json'),
+                 JSON.stringify({ now: Date.now(), xin: x}));
+            return { foo: "bar", xin: x };
+        })
+    );
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
@@ -17,6 +35,11 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from DockShell!');
+
+        let result = vscode.commands.executeCommand('dockshell.persistWorkspaceData',[ 1, 2, 3]);
+        result.then( (v) => {
+            console.log(v);
+        });
         //vscode.commands.getCommands().then((v) => {console.log(v); });
         //console.log("End of command handler for dockshell.helloWorld");
         const resultPromise = vscode.window.showQuickPick(
